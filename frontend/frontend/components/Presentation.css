@@ -1,0 +1,33 @@
+.presentation-section {
+    padding: 50px 20px;
+    background-color: #f4f2f0;
+    color: #222;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .presentation-section h2 {
+    color: #6b0a0a; /* Bordeaux */
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+  }
+  
+  .presentation-section p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #333333;
+    max-width: 700px;
+    margin: 0 auto 15px;
+  }
+  
+  .presentation-section p em {
+    display: block;
+    font-style: italic;
+    color: #d4af37; /* Doré */
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  

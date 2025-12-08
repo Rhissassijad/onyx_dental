@@ -1,0 +1,60 @@
+.equipe-section {
+    padding: 40px 20px;
+    background-color: #f7f7f7;
+    color: #222;
+    text-align: center;
+  }
+  
+  .equipe-section h2 {
+    color: #6b0a0a; /* bordeaux */
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .team-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .team-member-card {
+    background-color: white;
+    border: 2px solid #6b0a0a; /* bordeaux */
+    border-radius: 12px;
+    padding: 20px;
+    width: 220px;
+    box-shadow: 0 4px 10px rgba(107, 10, 10, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .team-member-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 20px rgba(107, 10, 10, 0.35);
+  }
+  
+  .team-member-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #d4af37; /* golden detail */
+  }
+  
+  .team-member-card h3 {
+    margin: 0 0 8px;
+    color: #3a0b0b; /* dark bordeaux */
+    font-size: 1.25rem;
+  }
+  
+  .role {
+    font-style: italic;
+    color: #555555;
+    font-weight: 600;
+  }
+  

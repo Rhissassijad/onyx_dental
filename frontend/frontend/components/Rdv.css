@@ -1,0 +1,90 @@
+.rdv-section {
+    padding: 40px 20px;
+    background-color: #fbfaf9;
+    max-width: 700px;
+    margin: 0 auto 80px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 15px;
+    box-shadow: 0 6px 16px rgba(107, 10, 10, 0.15);
+    border: 3px solid #6b0a0a; /* Bordeaux */
+  }
+  
+  .rdv-section h2 {
+    color: #6b0a0a;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+  
+  .rdv-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .input-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #3a0b0b;
+  }
+  
+  .input-group input,
+  .input-group select {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    transition: border-color 0.3s ease;
+    outline-offset: 2px;
+  }
+  
+  .input-group input:focus,
+  .input-group select:focus {
+    border-color: #6b0a0a;
+    box-shadow: 0 0 8px rgba(107, 10, 10, 0.3);
+  }
+  
+  .error-message {
+    color: #d12f2f;
+    font-weight: 700;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+  
+  .submit-btn {
+    background-color: #6b0a0a;
+    color: #d4af37;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-btn:hover:not(:disabled),
+  .submit-btn:focus:not(:disabled) {
+    background-color: #4d0606;
+    outline: none;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #a37777;
+    cursor: not-allowed;
+  }
+  
+  .payment-info {
+    margin-top: 18px;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    font-style: italic;
+  }
+  

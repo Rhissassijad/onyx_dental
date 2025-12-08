@@ -1,0 +1,40 @@
+.contacts-section {
+    padding: 40px 20px;
+    background-color: #fff;
+    color: #222;
+    text-align: center;
+  }
+  
+  .contacts-section h2 {
+    color: #6b0a0a; /* Bordeaux */
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .contact-info {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #3a0b0b;
+    line-height: 1.8;
+  }
+  
+  .contact-info p {
+    margin: 12px 0;
+  }
+  
+  .contact-info a {
+    color: #6b0a0a; /* Bordeaux link */
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .contact-info a:hover {
+    color: #d4af37; /* Golden hover */
+    text-decoration: underline;
+  }
+  
