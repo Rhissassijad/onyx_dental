@@ -3,15 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg: #f8f3f2;
+  --surface: #fffdfd;
+  --surface-muted: #f9efee;
+  --brand: #7a1018;
+  --brand-deep: #4f0910;
+  --accent: #982334;
+  --ink: #2d1217;
+  --ink-soft: #67474d;
+  --line: #ead8da;
+  --success: #982334;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --shadow-soft: 0 14px 36px rgba(79, 9, 16, 0.12);
+  --shadow-card: 0 8px 24px rgba(79, 9, 16, 0.08);
 }
 
 html {
@@ -25,11 +30,15 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(120% 120% at 5% 0%, #f8e6e8 0%, transparent 42%),
+    radial-gradient(100% 100% at 100% 15%, #fdf0e4 0%, transparent 38%),
+    linear-gradient(180deg, #fbf6f5 0%, #fffefe 70%);
+  font-family: "Segoe UI", "Noto Sans", Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
 }
 
 * {
@@ -43,8 +52,6 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+main {
+  width: 100%;
 }

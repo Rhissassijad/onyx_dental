@@ -1,90 +1,139 @@
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 20px 40px;
+}
+
 .rdv-section {
-    padding: 40px 20px;
-    background-color: #fbfaf9;
-    max-width: 700px;
-    margin: 0 auto 80px;
-    text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border-radius: 15px;
-    box-shadow: 0 6px 16px rgba(107, 10, 10, 0.15);
-    border: 3px solid #6b0a0a; /* Bordeaux */
+  background: linear-gradient(145deg, #fffefe 0%, #f8eef0 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 30px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.rdv-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.rdv-section h2 {
+  color: var(--ink);
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.rdv-help {
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+  font-size: 0.96rem;
+}
+
+.rdv-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 6px;
+}
+
+.input-group label {
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+  padding: 11px 12px;
+  font-size: 0.97rem;
+  border-radius: 10px;
+  border: 1px solid #d9c3c6;
+  background: #ffffff;
+  color: var(--ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(122, 16, 24, 0.15);
+  outline: none;
+}
+
+.input-group small {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.rdv-form .input-group:nth-child(5),
+.rdv-form .input-group:nth-child(6),
+.error-message,
+.submit-btn {
+  grid-column: 1 / -1;
+}
+
+.error-message {
+  color: #c12626;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.submit-btn {
+  margin-top: 4px;
+  border: none;
+  background: var(--brand);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled),
+.submit-btn:focus-visible:not(:disabled) {
+  background-color: var(--brand-deep);
+  transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.payment-info {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 760px) {
+  .rdv-section {
+    padding: 22px;
   }
-  
-  .rdv-section h2 {
-    color: #6b0a0a;
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-  }
-  
+
   .rdv-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+    grid-template-columns: 1fr;
   }
-  
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-  }
-  
-  .input-group label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #3a0b0b;
-  }
-  
-  .input-group input,
-  .input-group select {
-    padding: 10px 12px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 2px solid #ccc;
-    transition: border-color 0.3s ease;
-    outline-offset: 2px;
-  }
-  
-  .input-group input:focus,
-  .input-group select:focus {
-    border-color: #6b0a0a;
-    box-shadow: 0 0 8px rgba(107, 10, 10, 0.3);
-  }
-  
-  .error-message {
-    color: #d12f2f;
-    font-weight: 700;
-    margin-top: -10px;
-    margin-bottom: 10px;
-  }
-  
+
+  .rdv-form .input-group:nth-child(5),
+  .rdv-form .input-group:nth-child(6),
+  .error-message,
   .submit-btn {
-    background-color: #6b0a0a;
-    color: #d4af37;
-    font-weight: 700;
-    font-size: 1.15rem;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    grid-column: auto;
   }
-  
-  .submit-btn:hover:not(:disabled),
-  .submit-btn:focus:not(:disabled) {
-    background-color: #4d0606;
-    outline: none;
-  }
-  
-  .submit-btn:disabled {
-    background-color: #a37777;
-    cursor: not-allowed;
-  }
-  
-  .payment-info {
-    margin-top: 18px;
-    font-size: 0.9rem;
-    color: #4a4a4a;
-    font-style: italic;
-  }
-  
+}
