@@ -1,6 +1,6 @@
 # Onyx Dental Office
 
-A modern dental office web application with appointment booking, team management, and payment processing.
+A modern dental office web application with appointment booking and team management.
 
 ## Project Structure
 
