@@ -16,7 +16,6 @@ onyx-dental-office/
 - **Frontend**: Next.js, React, Tailwind CSS
 - **Backend**: Express.js, Node.js
 - **Database**: MongoDB Atlas
-- **Payments**: Stripe
 - **Deployment**: Vercel (Frontend), Render (Backend)
 
 ## Local Development Setup
@@ -25,7 +24,6 @@ onyx-dental-office/
 - Node.js (v16 or higher)
 - npm or yarn
 - MongoDB Atlas account
-- Stripe account
 
 ### Backend Setup
 
@@ -38,7 +36,6 @@ Create `.env` file:
 ```
 MONGO_URI=mongodb://localhost:27017/onyxdental
 PORT=5000
-STRIPE_SECRET_KEY=sk_test_your_key
 FRONTEND_URL=http://localhost:3000
 ```
 
@@ -57,7 +54,6 @@ npm install
 Create `.env.local` file:
 ```
 NEXT_PUBLIC_API_URL=http://localhost:5000
-NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_your_key
 ```
 
 Start frontend:
@@ -76,12 +72,10 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions to Ver
 ### Backend (.env)
 - `MONGO_URI` - MongoDB connection string
 - `PORT` - Server port (default: 5000)
-- `STRIPE_SECRET_KEY` - Stripe secret key
 - `FRONTEND_URL` - Frontend URL for CORS
 
 ### Frontend (.env.local)
 - `NEXT_PUBLIC_API_URL` - Backend API URL
-- `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` - Stripe public key
 
 ## Security
 
@@ -94,7 +88,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions to Ver
 ## Features
 
 - 📅 Online appointment booking
-- 💳 Secure payment processing with Stripe
 - 👥 Team member profiles
 - 📍 Location information
 - 📱 Fully responsive design
@@ -104,7 +97,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions to Ver
 - `GET /api/team` - Get all team members
 - `GET /api/appointments` - Get all appointments (admin)
 - `POST /api/check-availability` - Check appointment availability
-- `POST /api/create-checkout-session` - Create Stripe payment session
 
 ## License
 
