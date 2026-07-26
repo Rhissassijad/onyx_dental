@@ -96,6 +96,10 @@
 }
 
 .location-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border-radius: 999px;
   padding: 11px 15px;
   font-size: 0.9rem;
@@ -104,7 +108,7 @@
 }
 
 .location-actions a:first-child {
-  background: var(--accent);
+  background: #2ae321;
   color: #ffffff;
 }
 
@@ -121,7 +125,7 @@
 
 .emplacement-map {
   min-height: 300px;
-  max-height: 350px;
+  max-height: 513px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--line);

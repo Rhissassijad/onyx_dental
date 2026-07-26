@@ -9,7 +9,10 @@ const Contacts = () => {
 
         <div className="contact-grid">
           <a className="contact-card" href="tel:+212644745221">
-            <h3>Telephone</h3>
+            <div className="contact-card-title">
+              <img src="/tel.png" alt="" className="contact-icon" />
+              <h3>Telephone</h3>
+            </div>
             <p>+212 6 44 74 52 21</p>
           </a>
 
@@ -19,7 +22,10 @@ const Contacts = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <h3>WhatsApp</h3>
+            <div className="contact-card-title">
+              <img src="/whatsapp.png" alt="" className="contact-icon" />
+              <h3>WhatsApp</h3>
+            </div>
             <p>Reponse rapide du cabinet</p>
           </a>
 
@@ -31,7 +37,7 @@ const Contacts = () => {
 
         <p className="footer-address">
           Onyx Dental Office, 4eme etage Immeuble i Center, Lotissement Izdihar
-          N 13, Bouskoura, Maroc
+          N°13, Bouskoura, Maroc
         </p>
       </div>
     </section>

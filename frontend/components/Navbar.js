@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import "./Navbar.css";
 
 const navItems = [
-  { href: "#presentation", label: "Accueil" },
-  { href: "#services", label: "Soins" },
-  { href: "#emplacement", label: "Localisation" },
-  { href: "#rdv", label: "Rendez-vous" },
-  { href: "#contacts", label: "Contact" },
+  { href: "/", label: "Accueil" },
+  { href: "/#services", label: "Soins" },
+  { href: "/#emplacement", label: "Localisation" },
+  { href: "/#rdv", label: "Rendez-vous" },
+  { href: "/#contacts", label: "Contact" },
 ];
 
 const Navbar = () => {
@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className="navbar-topnote">Cabinet dentaire moderne a Bouskoura</div>
 
       <div className="navbar-container">
-        <a href="#presentation" className="brand" onClick={closeMobileMenu}>
+        <a href="/" className="brand" onClick={closeMobileMenu}>
           <img src="/Logo.png" alt="Onyx Dental Office" />
           <div>
             <p>Onyx Dental Office</p>
@@ -64,14 +64,19 @@ const Navbar = () => {
               onClick={closeMobileMenu}
               className="action-btn whatsapp"
             >
-              WhatsApp
+              <img src="/whatsapp.png" alt="" className="action-icon" />
+              <span>WhatsApp</span>
             </a>
             <a
               href="tel:+212644745221"
               onClick={closeMobileMenu}
               className="action-btn call"
             >
-              Appeler
+              <img src="/tel.png" alt="" className="action-icon" />
+              <span>Appeler</span>
+            </a>
+            <a href="/employee/login" onClick={closeMobileMenu} className="action-btn login">
+              Login
             </a>
           </div>
         </div>

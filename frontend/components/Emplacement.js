@@ -16,9 +16,9 @@ const Emplacement = () => {
             <p>
               <strong>Onyx Dental Office</strong>
               <br />
-              4eme etage Immeuble i Center
+              4eme étage Immeuble i Center
               <br />
-              Lotissement Izdihar N 13
+              Lotissement Izdihar N°13
               <br />
               Bouskoura, Maroc
             </p>
@@ -46,7 +46,7 @@ const Emplacement = () => {
               </li>
               <li>
                 <span>Dimanche</span>
-                <strong>Ferme</strong>
+                <strong>Fermé</strong>
               </li>
             </ul>
           </div>
@@ -57,9 +57,13 @@ const Emplacement = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              WhatsApp
+              <img src="/whatsapp.png" alt="" className="action-icon" />
+              <span>WhatsApp</span>
             </a>
-            <a href="tel:+212644745221">Appeler</a>
+            <a href="tel:+212644745221">
+              <img src="/tel.png" alt="" className="action-icon" />
+              <span>Appeler</span>
+            </a>
           </div>
         </div>
 

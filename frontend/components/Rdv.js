@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import "./Rdv.css";
-import { loadStripe } from "@stripe/stripe-js";
 
 const Rdv = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +25,6 @@ const Rdv = () => {
     "15:00",
     "15:30",
     "16:00",
-    "16:30",
   ]);
 
   const [unavailableSlots, setUnavailableSlots] = useState([]);
@@ -34,9 +32,7 @@ const Rdv = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const backendUrl = "http://localhost:4000";
-
-  const stripePromise = loadStripe("pk_test_XXXXX_REPLACE_THIS");
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -57,6 +53,9 @@ const Rdv = () => {
         setIsChecking(true);
 
         const res = await fetch(`${backendUrl}/api/appointments`);
+        if (!res.ok) {
+          throw new Error(`Backend returned ${res.status}`);
+        }
         const appointments = await res.json();
 
         const takenSlots = appointments
@@ -75,6 +74,7 @@ const Rdv = () => {
         setUnavailableSlots(takenSlots);
       } catch (err) {
         console.error("Erreur de recuperation:", err);
+        setErrorMsg("Le service de disponibilites est indisponible pour le moment.");
       } finally {
         setIsChecking(false);
       }
@@ -130,7 +130,7 @@ const Rdv = () => {
     try {
       const datetimeStr = new Date(`${formData.date}T${formData.time}:00`).toISOString();
 
-      const response = await fetch(`${backendUrl}/api/create-checkout-session`, {
+      const response = await fetch(`${backendUrl}/api/appointments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -145,12 +145,16 @@ const Rdv = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMsg(data.error || "Erreur lors du paiement.");
+        setErrorMsg(data.error || "Impossible de confirmer le rendez-vous.");
         return;
       }
 
-      const stripe = await stripePromise;
-      await stripe.redirectToCheckout({ sessionId: data.id });
+      if (data.appointment?._id) {
+        window.location.assign(`/success?appointmentId=${data.appointment._id}`);
+        return;
+      }
+
+      throw new Error("Aucune confirmation de rendez-vous disponible.");
     } catch (err) {
       console.error(err);
       setErrorMsg("Erreur reseau. Veuillez reessayer.");
@@ -167,7 +171,7 @@ const Rdv = () => {
 
         <p className="rdv-help">
           Besoin d'aide pour le formulaire ? Nous vous accompagnons par telephone
-          ou WhatsApp en francais.
+          ou WhatsApp en francais ou en Darija.
         </p>
 
         <form className="rdv-form" onSubmit={handleSubmit}>
@@ -260,11 +264,11 @@ const Rdv = () => {
           {errorMsg && <p className="error-message">{errorMsg}</p>}
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? "Traitement..." : "Reserver et payer"}
+            {loading ? "Traitement..." : "Réserver"}
           </button>
         </form>
 
-        <p className="payment-info">Paiement securise via Stripe.</p>
+        <p className="payment-info">Confirmation de rendez-vous par email.</p>
       </div>
     </section>
   );

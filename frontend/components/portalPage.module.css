@@ -1,0 +1,203 @@
+.pageShell {
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 120% at 5% 0%, #f8e6e8 0%, transparent 42%),
+    radial-gradient(100% 100% at 100% 15%, #fdf0e4 0%, transparent 38%),
+    linear-gradient(180deg, #fbf6f5 0%, #fffefe 70%);
+}
+
+.pageInner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 20px 70px;
+}
+
+.heroCard,
+.panelCard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.heroCard {
+  padding: 32px;
+}
+
+.panelCard {
+  padding: 24px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.pageTitle {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--brand-deep);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.pageText {
+  color: var(--ink-soft);
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.button,
+.secondaryButton,
+.ghostButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button:hover,
+.secondaryButton:hover,
+.ghostButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(79, 9, 16, 0.16);
+}
+
+.button {
+  background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 100%);
+  color: #fff;
+}
+
+.secondaryButton {
+  background: #fff;
+  color: var(--brand);
+  border-color: var(--line);
+}
+
+.ghostButton {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.formGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.input,
+.select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-size: 0.97rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(152, 35, 52, 0.12);
+}
+
+.errorText {
+  color: #b42318;
+  font-weight: 600;
+}
+
+.successText {
+  color: #0a7f3e;
+  font-weight: 600;
+}
+
+.infoList {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.infoItem {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface-muted);
+  color: var(--ink-soft);
+}
+
+.appointmentsGrid {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.appointmentCard {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fffdfd 0%, #fcf4f4 100%);
+}
+
+.appointmentTitle {
+  font-weight: 800;
+  color: var(--brand-deep);
+  margin-bottom: 6px;
+}
+
+.appointmentMeta {
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(152, 35, 52, 0.1);
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+@media (max-width: 680px) {
+  .heroCard,
+  .panelCard {
+    padding: 22px;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+  }
+}

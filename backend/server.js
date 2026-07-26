@@ -2,16 +2,40 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5001;
+const employeeSessions = new Map();
 
-app.use(cors());
+// CORS Configuration
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+].filter(Boolean);
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/onyxdental', {
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/onyxdental';
+mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('Connected to MongoDB'))
@@ -33,11 +57,62 @@ const AppointmentSchema = new mongoose.Schema({
     phone: String,
     email: String,
     datetime: Date,
-    paid: Boolean,
-    stripeSessionId: String,
+    status: { type: String, default: 'pending' },
+    confirmedAt: Date,
+    paid: { type: Boolean, default: false },
+    paymentProvider: { type: String, default: 'none' },
+    paymentReference: String,
 });
 
 const Appointment = mongoose.model('Appointment', AppointmentSchema);
+
+const transporter = process.env.SMTP_HOST
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: false,
+      auth: process.env.SMTP_USER && process.env.SMTP_PASS
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          }
+        : undefined,
+    })
+  : null;
+
+async function sendReminderEmail({ to, firstName, datetime }) {
+    if (!to || !transporter) {
+        console.log('[Reminder] Email skipped. Missing recipient or SMTP configuration.', { to, firstName, datetime });
+        return { sent: false, reason: 'smtp-not-configured' };
+    }
+
+    const formattedDate = new Date(datetime).toLocaleString('fr-FR', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+    });
+
+    try {
+        await transporter.sendMail({
+            from: process.env.SMTP_FROM || 'noreply@onyxdental.local',
+            to,
+            subject: 'Rappel de rendez-vous - Onyx Dental',
+            html: `<p>Bonjour ${firstName || 'client'},</p><p>Ce rappel confirme votre rendez-vous le ${formattedDate}.</p><p>Merci de nous contacter si vous avez besoin de modifier votre créneau.</p>`,
+        });
+        return { sent: true };
+    } catch (error) {
+        console.error('[Reminder] Email failed', error);
+        return { sent: false, reason: error.message };
+    }
+}
+
+function requireEmployee(req, res, next) {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.replace('Bearer ', '').trim();
+    if (!employeeSessions.has(token)) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+}
 
 // Routes
 
@@ -78,98 +153,154 @@ app.post('/api/check-availability', async (req, res) => {
     }
 });
 
-// Create a Stripe Payment Session and appointment placeholder
-app.post('/api/create-checkout-session', async (req, res) => {
+app.get('/api/appointments/:id', async (req, res) => {
+    try {
+        const appointment = await Appointment.findById(req.params.id);
+        if (!appointment) {
+            return res.status(404).json({ error: 'Appointment not found' });
+        }
+        res.json(appointment);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.post('/api/appointments', async (req, res) => {
     try {
         const { firstName, lastName, phone, email, datetime } = req.body;
 
         const dateObj = new Date(datetime);
-        // Check availability first
-        const existing = await Appointment.findOne({datetime: dateObj});
+        const existing = await Appointment.findOne({ datetime: dateObj });
         if (existing) {
             return res.status(400).json({ error: 'This appointment slot is already booked.' });
         }
 
-        // Price amount in cents (e.g. 50 euros = 5000)
-        const paymentAmount = 5000; // Fixed price for appointment: 50 euros
-
-        // Create Stripe checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: 'eur',
-                    product_data: {
-                        name: 'Prise de rendez-vous Onyx Dental',
-                    },
-                    unit_amount: paymentAmount,
-                },
-                quantity: 1,
-            }],
-            mode: 'payment',
-            success_url: 'http://localhost:3000/success.html?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:3000/cancel.html',
-            metadata: {
-                firstName,
-                lastName,
-                phone,
-                email,
-                datetime: dateObj.toISOString(),
-            },
-        });
-
-        // Create appointment entry with paid=false, will update after webhook confirmation
         const appointment = new Appointment({
             firstName,
             lastName,
             phone,
             email,
             datetime: dateObj,
+            status: 'pending',
             paid: false,
-            stripeSessionId: session.id,
+            paymentProvider: 'none',
+            paymentReference: `appointment-${Date.now()}`,
         });
         await appointment.save();
 
-        res.json({ id: session.id });
+        res.json({ appointment });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-// Stripe webhook to confirm payment and mark appointment as paid
-// Configure your Stripe webhook secret in environment variable STRIPE_WEBHOOK_SECRET for production
-const endpointSecret = ''; // OPTIONAL, leave empty if not set
-
-app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) => {
-    const sig = req.headers['stripe-signature'];
-
-    let event;
-
+app.post('/api/appointments/:id/confirm', async (req, res) => {
     try {
-        if (endpointSecret) {
-            event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-        } else {
-            event = req.body;
+        const appointment = await Appointment.findById(req.params.id);
+        if (!appointment) {
+            return res.status(404).json({ error: 'Appointment not found' });
         }
-    } catch (err) {
-        console.error('Webhook signature verification failed.', err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
 
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        // Find the appointment by stripeSessionId and mark as paid
-        const appt = await Appointment.findOne({stripeSessionId: session.id});
-        if (appt) {
-            appt.paid = true;
-            await appt.save();
-        }
-    }
+        appointment.status = 'confirmed';
+        appointment.confirmedAt = new Date();
+        await appointment.save();
 
-    res.json({received: true});
+        const reminderResult = await sendReminderEmail({
+            to: appointment.email,
+            firstName: appointment.firstName,
+            datetime: appointment.datetime,
+        });
+
+        res.json({ appointment, reminderSent: reminderResult.sent });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Unable to confirm appointment' });
+    }
 });
 
+app.post('/api/create-checkout-session', async (req, res) => {
+    const { firstName, lastName, phone, email, datetime } = req.body;
+    const dateObj = new Date(datetime);
+    const appointment = new Appointment({
+        firstName,
+        lastName,
+        phone,
+        email,
+        datetime: dateObj,
+        status: 'pending',
+        paid: false,
+        paymentProvider: 'none',
+        paymentReference: `appointment-${Date.now()}`,
+    });
+    await appointment.save();
+    res.json({ appointment });
+});
+
+app.post('/api/employees/login', (req, res) => {
+    const username = req.body.username || '';
+    const password = req.body.password || '';
+    const expectedUsername = process.env.EMPLOYEE_USERNAME || 'employee';
+    const expectedPassword = process.env.EMPLOYEE_PASSWORD || 'onyx2026';
+
+    if (username !== expectedUsername || password !== expectedPassword) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = crypto.randomBytes(16).toString('hex');
+    employeeSessions.set(token, { username });
+
+    res.json({ token, employeeName: 'Employee' });
+});
+
+app.get('/api/employees/appointments', requireEmployee, async (req, res) => {
+    const appointments = await Appointment.find().sort({ datetime: 1 });
+    res.json(appointments);
+});
+
+app.post('/api/employees/appointments', requireEmployee, async (req, res) => {
+    try {
+        const { firstName, lastName, phone, email, datetime } = req.body;
+        const dateObj = new Date(datetime);
+        const existing = await Appointment.findOne({ datetime: dateObj });
+        if (existing) {
+            return res.status(400).json({ error: 'This appointment slot is already booked.' });
+        }
+
+        const appointment = new Appointment({
+            firstName,
+            lastName,
+            phone,
+            email,
+            datetime: dateObj,
+            status: 'confirmed',
+            confirmedAt: new Date(),
+            paid: true,
+            paymentProvider: 'employee-booked',
+            paymentReference: `employee-${Date.now()}`,
+        });
+        await appointment.save();
+
+        await sendReminderEmail({ to: email, firstName, datetime: dateObj });
+        res.json({ appointment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Unable to create appointment' });
+    }
+});
+
+app.post('/api/employees/appointments/:id/cancel', requireEmployee, async (req, res) => {
+    try {
+        const appointment = await Appointment.findByIdAndDelete(req.params.id);
+        if (!appointment) {
+            return res.status(404).json({ error: 'Appointment not found' });
+        }
+        res.json({ success: true, deletedId: req.params.id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Unable to cancel appointment' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
